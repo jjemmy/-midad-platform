@@ -12,8 +12,8 @@
 | `public/index.html` | واجهة المنصة الكاملة (HTML + Tailwind CDN + JavaScript) |
 | `public/favicon.svg` | أيقونة الموقع |
 | `server.js` | خادم ملفات ثابتة بدون أي اعتماديات خارجية (Node.js فقط) |
+| `Dockerfile` | صورة البناء (Node.js 22 Alpine) — بناء محدد وسريع |
 | `railway.json` | إعدادات النشر على Railway (أمر التشغيل + فحص الصحة) |
-| `nixpacks.toml` | إعدادات البناء (Node.js 20) |
 
 ## المزايا
 
@@ -44,17 +44,24 @@ PORT=8080 npm start
 
 1. ادخل على [railway.app](https://railway.app) واختر **New Project** ← **Deploy from GitHub repo**.
 2. اختر المستودع `jjemmy/-midad-platform` والفرع المطلوب.
-3. Railway سيكتشف المشروع تلقائياً عبر Nixpacks ويشغّل `npm start` — لا حاجة لأي إعداد إضافي.
-4. من تبويب **Settings** ← **Networking** اضغط **Generate Domain** للحصول على رابط عام.
+3. Railway يبني عبر `Dockerfile` مباشرة (محدد في `railway.json`) — لا يعتمد على اكتشاف تلقائي.
+4. من تبويب **Settings** ← **Networking** اضغط **Generate Domain** واختر المنفذ `8080`.
 
 ### متغيرات البيئة
 
 | المتغير | الوصف | الافتراضي |
 | --- | --- | --- |
-| `PORT` | المنفذ — تحدده Railway تلقائياً | `3000` |
+| `PORT` | المنفذ — مضبوط على `8080` داخل الصورة، وتستطيع Railway تجاوزه | `8080` |
 | `HOST` | عنوان الاستماع | `0.0.0.0` |
 
 لا يحتاج المشروع أي مفاتيح أو أسرار.
+
+### بناء واختبار الصورة محلياً
+
+```bash
+docker build -t midad-platform .
+docker run --rm -p 8080:8080 midad-platform
+```
 
 ### فحص الصحة (Health Check)
 
