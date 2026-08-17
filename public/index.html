@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مداد MIDAD - لكل كلمة أثر | منصة التخطيط الإعلامي وصناعة المحتوى</title>
     <meta name="description" content="مداد - منصة التخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي. لكل كلمة أثر.">
-    <link rel="icon" href="/assets/favicon.png" type="image/png">
+    <link rel="icon" href="/assets/favicon-48.png" sizes="48x48" type="image/png">
+    <link rel="icon" href="/assets/favicon.png" sizes="256x256" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Apply the saved theme before first paint. Light is the default; dark is opt-in. -->
     <script>
@@ -29,19 +32,23 @@
             theme: {
                 extend: {
                     colors: {
+                        // Brand scale built on the logo's blue (#6BADFF sits between 300 and 400).
                         brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
                             dark: '#0f172a'
                         },
                         accent: {
                             gold: '#f59e0b',
-                            purple: '#6366f1'
+                            sky: '#6badff'
                         }
                     },
                     fontFamily: {
@@ -80,10 +87,14 @@
             backdrop-filter: blur(12px);
         }
         .tab-btn.active {
-            border-bottom: 3px solid #14b8a6;
-            color: #14b8a6;
-            background-color: rgba(20, 184, 166, 0.08);
+            border-bottom: 3px solid #3b82f6;
+            color: #2563eb;
+            background-color: rgba(59, 130, 246, 0.08);
             font-weight: 700;
+        }
+        .dark .tab-btn.active {
+            color: #60a5fa;
+            background-color: rgba(59, 130, 246, 0.14);
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
