@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مداد MIDAD - لكل فكرة أثر | منصة التخطيط الإعلامي وصناعة المحتوى</title>
+    <meta name="description" content="مداد - منصة التخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي. لكل فكرة أثر.">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -140,7 +142,7 @@
         <!-- TOP CONTEXT CONFIGURATOR (المعطيات الخاصة) -->
         <section class="bg-slate-900 text-yellow-400 py-6 border-b border-slate-800 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 pointer-events-none"></div>
-            
+
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                     <h2 class="text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-2">
@@ -151,7 +153,7 @@
                         <i class="fa-solid fa-bolt text-yellow-400 ml-1"></i>تحديث حي وتفاعلي
                     </span>
                 </div>
-                
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Event -->
                     <div class="bg-slate-800/80 p-3 rounded-xl border border-yellow-400/20 focus-within:border-yellow-400 transition-all">
@@ -159,7 +161,7 @@
                             <i class="fa-solid fa-calendar-day text-yellow-400"></i>
                             الحدث:
                         </label>
-                        <input type="text" id="input-event" value="" placeholder="أدخل اسم الحدث..." 
+                        <input type="text" id="input-event" value="" placeholder="أدخل اسم الحدث..."
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-yellow-300 placeholder-yellow-500/50 font-bold focus:outline-none focus:border-yellow-400 transition-colors"
                             oninput="updateCampaignContext()">
                     </div>
@@ -170,7 +172,7 @@
                             <i class="fa-solid fa-heading text-yellow-400"></i>
                             الموضوع:
                         </label>
-                        <input type="text" id="input-subject" value="" placeholder="أدخل موضوع الحملة..." 
+                        <input type="text" id="input-subject" value="" placeholder="أدخل موضوع الحملة..."
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-yellow-300 placeholder-yellow-500/50 font-bold focus:outline-none focus:border-yellow-400 transition-colors"
                             oninput="updateCampaignContext()">
                     </div>
@@ -181,7 +183,7 @@
                             <i class="fa-solid fa-building-columns text-yellow-400"></i>
                             المصدر:
                         </label>
-                        <input type="text" id="input-goal" value="" placeholder="أدخل مصدر الحملة..." 
+                        <input type="text" id="input-goal" value="" placeholder="أدخل مصدر الحملة..."
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-yellow-300 placeholder-yellow-500/50 font-bold focus:outline-none focus:border-yellow-400 transition-colors"
                             oninput="updateCampaignContext()">
                     </div>
@@ -273,7 +275,7 @@
                 <!-- Summary Dynamic Card -->
                 <div class="bg-gradient-to-br from-brand-900 via-slate-900 to-slate-950 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-brand-500/20">
                     <div class="absolute top-0 left-0 -mt-10 -ml-10 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
+
                     <div class="relative z-10">
                         <div class="inline-flex items-center gap-2 bg-brand-500/20 text-brand-300 border border-brand-500/30 px-3 py-1 rounded-full text-xs font-semibold mb-4">
                             <i class="fa-solid fa-bullhorn"></i> بطاقة إيجاز الحملة
@@ -281,7 +283,7 @@
                         <h2 class="text-2xl sm:text-3xl font-extrabold mb-4 text-white leading-tight" id="display-campaign-title">
                             حملة: [لم يتم تحديد الحدث بعد]
                         </h2>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-800">
                             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80">
                                 <span class="text-xs text-slate-400 block mb-1">الموضوع الرئيسي</span>
@@ -482,7 +484,7 @@
                 <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
                     <i class="fa-solid fa-lightbulb text-amber-600 text-xl mt-0.5"></i>
                     <div class="text-xs text-amber-900 leading-relaxed">
-                        <strong class="font-bold">منهجية تحديد الدور (Role Prompting):</strong> 
+                        <strong class="font-bold">منهجية تحديد الدور (Role Prompting):</strong>
                         تعتمد الأوامر أدناه على إعطاء نماذج الذكاء الاصطناعي شخصية مهنية خبيرة، مما يرفع جودة ونبرة المخرجات. كما تحتوي الأوامر على تنويهات إرشادية باللغة العربية مفصولة بـ <code class="bg-amber-100 px-1.5 py-0.5 rounded text-amber-800 font-bold">----</code> لتوضيح الغرض من كل خطوة داخل الأمر، بالإضافة إلى نافذة ترجمة وشرح لكل أمر باللغة العربية أسفل اللغات غير العربية.
                     </div>
                 </div>
@@ -862,10 +864,10 @@
 
             // Re-render Prompts for Tab 3
             renderPrompts(
-                eventVal || '[أدخل الحدث]', 
-                subjectVal || '[أدخل الموضوع]', 
-                goalVal || '[أدخل المصدر]', 
-                audienceVal, 
+                eventVal || '[أدخل الحدث]',
+                subjectVal || '[أدخل الموضوع]',
+                goalVal || '[أدخل المصدر]',
+                audienceVal,
                 langVal,
                 platformsNames
             );
@@ -1059,7 +1061,7 @@
             promptsData.forEach(p => {
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4";
-                
+
                 card.innerHTML = `
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                         <div class="flex items-center gap-3">
@@ -1069,7 +1071,7 @@
                                 <p class="text-xs text-brand-700 font-semibold mt-0.5">${p.role}</p>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-center gap-2 shrink-0">
                             <button onclick="copyPromptText('${p.key}')" class="px-3.5 py-1.5 bg-brand-600 text-white hover:bg-brand-700 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm">
                                 <i class="fa-regular fa-copy"></i> نسخ الأمر (Copy)
@@ -1224,4 +1226,3 @@ ${p.promptText}
     </script>
 </body>
 </html>
-
