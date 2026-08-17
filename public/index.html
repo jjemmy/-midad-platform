@@ -3,18 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مداد MIDAD - لكل فكرة أثر | منصة التخطيط الإعلامي وصناعة المحتوى</title>
-    <meta name="description" content="مداد - منصة التخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي. لكل فكرة أثر.">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <title>مداد MIDAD - لكل كلمة أثر | منصة التخطيط الإعلامي وصناعة المحتوى</title>
+    <meta name="description" content="مداد - منصة التخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي. لكل كلمة أثر.">
+    <link rel="icon" href="/assets/favicon.png" type="image/png">
+
+    <!-- Apply the saved theme before first paint. Light is the default; dark is opt-in. -->
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('midad_theme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -34,16 +45,35 @@
                         }
                     },
                     fontFamily: {
-                        cairo: ['Cairo', 'sans-serif']
+                        rpt: ['RPT', 'system-ui', 'sans-serif']
                     }
                 }
             }
         }
     </script>
     <style>
+        /* Official MIDAD brand typeface */
+        @font-face {
+            font-family: 'RPT';
+            src: url('/assets/rpt-regular.woff2') format('woff2');
+            font-weight: 100 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'RPT';
+            src: url('/assets/rpt-bold.woff2') format('woff2');
+            font-weight: 600 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'RPT', system-ui, -apple-system, 'Segoe UI', sans-serif;
             background-color: #f8fafc;
+        }
+        .dark body {
+            background-color: #020617;
         }
         .glass-header {
             background: rgba(15, 23, 42, 0.98);
@@ -63,77 +93,80 @@
             background: #cbd5e1;
             border-radius: 4px;
         }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        /* Sun/moon glyphs swap with the active theme */
+        .theme-icon-dark { display: none; }
+        .dark .theme-icon-dark { display: inline-block; }
+        .dark .theme-icon-light { display: none; }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 dark:text-slate-200 min-h-screen flex flex-col justify-between transition-colors">
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 ease-in-out bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-brand-500">
+    <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 ease-in-out bg-slate-900 dark:bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-brand-500">
         <i class="fa-solid fa-circle-check text-brand-500 text-xl"></i>
         <span id="toast-message" class="text-sm font-semibold">تم نسخ الأمر الموجه بنجاح!</span>
     </div>
 
     <!-- Translation Modal -->
     <div id="translation-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                     <i class="fa-solid fa-language text-brand-600"></i>
                     ترجمة وشرح الأمر الموجه باللغة العربية
                 </h3>
-                <button onclick="closeTranslationModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <button onclick="closeTranslationModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <div class="mt-4 text-sm text-slate-600 leading-relaxed space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar p-1" id="modal-content">
+            <div class="mt-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar p-1" id="modal-content">
                 <!-- Modal content dynamically injected -->
             </div>
             <div class="mt-6 text-left">
-                <button onclick="closeTranslationModal()" class="px-5 py-2 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700 transition-colors">إغلاق</button>
+                <button onclick="closeTranslationModal()" class="px-5 py-2 bg-slate-800 dark:bg-slate-700 text-white rounded-lg text-sm hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors">إغلاق</button>
             </div>
         </div>
     </div>
 
     <div>
-        <!-- Main Header with Vector Authentic White Logo -->
+        <!-- Main Header. Stays dark in both themes so the white brand mark reads correctly. -->
         <header class="glass-header text-white sticky top-0 z-40 border-b border-slate-800 shadow-xl">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <!-- Official MIDAD White Logo Container -->
-                    <div class="flex items-center gap-4">
-                        <div class="bg-white/10 hover:bg-white/15 transition-all p-2.5 rounded-2xl border border-white/20 shadow-inner flex items-center justify-center">
-                            <!-- Authentic MIDAD SVG Vector Logo in Original White Color -->
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 416 90" class="h-9 w-auto">
-                                <!-- M -->
-                                <path fill="#FFFFFF" d="M 10 80 V 10 H 26 L 48 53 L 70 10 H 86 V 80 H 71 V 32 L 52 70 H 44 L 25 32 V 80 Z" />
-                                <!-- I -->
-                                <path fill="#FFFFFF" d="M 102 10 H 118 V 80 H 102 Z" />
-                                <!-- D -->
-                                <path fill="#FFFFFF" d="M 134 10 H 168 C 198 10 216 26 216 45 C 216 64 198 80 168 80 H 134 Z M 150 24 V 66 H 167 C 187 66 200 55 200 45 C 200 35 187 24 167 24 Z" />
-                                <!-- A (Outer Legs) -->
-                                <path fill="#FFFFFF" d="M 232 80 L 262 10 H 278 L 308 80 H 291 L 270 30 L 249 80 Z" />
-                                <!-- A (Signature Purple Diamond) -->
-                                <path fill="#6366F1" d="M 270 51 L 279 63 L 270 75 L 261 63 Z" />
-                                <!-- D -->
-                                <path fill="#FFFFFF" d="M 324 10 H 358 C 388 10 406 26 406 45 C 406 64 388 80 358 80 H 324 Z M 340 24 V 66 H 357 C 377 66 390 55 390 45 C 390 35 377 24 357 24 Z" />
-                            </svg>
-                        </div>
-                        <div class="border-r border-slate-700 pr-4">
-                            <h1 class="text-xl font-black text-white tracking-wide">مداد</h1>
-                            <p class="text-xs text-yellow-400 font-bold tracking-wide">لكل فكرة أثر</p>
-                        </div>
-                    </div>
+                    <!-- Official MIDAD logo -->
+                    <a href="/" class="flex items-center shrink-0" aria-label="مداد - الصفحة الرئيسية">
+                        <picture>
+                            <source srcset="/assets/midad-logo.webp" type="image/webp">
+                            <img src="/assets/midad-logo.png" alt="مداد MIDAD — لكل كلمة أثر"
+                                 class="h-12 sm:h-14 w-auto" width="700" height="291">
+                        </picture>
+                    </a>
 
-                    <!-- Dynamic Audience Status Badge -->
-                    <div class="flex flex-wrap items-center gap-2 text-xs bg-slate-800/90 p-2.5 rounded-xl border border-yellow-400/30">
-                        <span class="text-yellow-400 font-bold">الجمهور المستهدف:</span>
-                        <span id="badge-audience" class="font-extrabold text-yellow-300 bg-amber-950/80 px-2.5 py-1 rounded-md border border-yellow-400/40">السعودي</span>
-                        <span class="text-slate-600">|</span>
-                        <span class="text-yellow-400 font-bold">اللغة:</span>
-                        <span id="badge-language" class="font-extrabold text-yellow-300 bg-amber-950/80 px-2.5 py-1 rounded-md border border-yellow-400/40">العربي</span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <!-- Dynamic Audience Status Badge -->
+                        <div class="flex flex-wrap items-center gap-2 text-xs bg-slate-800/90 p-2.5 rounded-xl border border-yellow-400/30">
+                            <span class="text-yellow-400 font-bold">الجمهور المستهدف:</span>
+                            <span id="badge-audience" class="font-extrabold text-yellow-300 bg-amber-950/80 px-2.5 py-1 rounded-md border border-yellow-400/40">السعودي</span>
+                            <span class="text-slate-600">|</span>
+                            <span class="text-yellow-400 font-bold">اللغة:</span>
+                            <span id="badge-language" class="font-extrabold text-yellow-300 bg-amber-950/80 px-2.5 py-1 rounded-md border border-yellow-400/40">العربي</span>
+                        </div>
+
+                        <!-- Theme Toggle -->
+                        <button onclick="toggleTheme()" id="theme-toggle" type="button"
+                                class="flex items-center gap-2 text-xs font-bold bg-slate-800/90 hover:bg-slate-700 text-yellow-300 px-3 py-2.5 rounded-xl border border-yellow-400/30 transition-colors"
+                                aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الوضع الليلي والنهاري">
+                            <span class="theme-icon-light"><i class="fa-solid fa-moon"></i></span>
+                            <span class="theme-icon-dark"><i class="fa-solid fa-sun"></i></span>
+                            <span class="theme-icon-light">الوضع الليلي</span>
+                            <span class="theme-icon-dark">الوضع النهاري</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -238,29 +271,29 @@
         </section>
 
         <!-- Navigation Tabs Bar -->
-        <nav class="bg-white border-b border-slate-200 sticky top-[73px] z-30 shadow-sm overflow-x-auto custom-scrollbar">
+        <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-[73px] z-30 shadow-sm overflow-x-auto custom-scrollbar transition-colors">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 space-x-reverse min-w-max">
-                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-compass text-base"></i>
                     <span>1. نظرة عامة والمطلوب</span>
                 </button>
-                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-cubes text-base"></i>
                     <span>2. مكونات الحملة الـ 5</span>
                 </button>
-                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-robot text-base"></i>
                     <span>3. خطة المحتوى والأوامر (Prompts)</span>
                 </button>
-                <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-brain text-base"></i>
                     <span>4. توظيف الذكاء الاصطناعي</span>
                 </button>
-                <button onclick="switchTab('tab5')" id="btn-tab5" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab5')" id="btn-tab5" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-square-check text-base"></i>
                     <span>5. معايير التقييم الـ 8</span>
                 </button>
-                <button onclick="switchTab('tab6')" id="btn-tab6" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 hover:text-brand-600 transition-all flex items-center gap-2">
+                <button onclick="switchTab('tab6')" id="btn-tab6" class="tab-btn py-4 px-4 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-base"></i>
                     <span>6. بناء الخطة التفاعلي</span>
                 </button>
@@ -305,77 +338,77 @@
                 <div>
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                                 <i class="fa-solid fa-list-check text-brand-600"></i>
                                 المراحل الـ 8 المطلوبة لبناء وتنفيذ الحملة
                             </h3>
-                            <p class="text-xs text-slate-500 mt-1">المسار المنهجي المعتمد لضمان أعلى أثر واستدامة للحملة الإعلامية</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">المسار المنهجي المعتمد لضمان أعلى أثر واستدامة للحملة الإعلامية</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <!-- Phase 1 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">01</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">التحليل والبحث</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">دراسة السياق العام للحدث، فهم توجهات الجمهور، وتحليل المنافسين والوسوم الأكثر تداولاً.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">01</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">التحليل والبحث</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">دراسة السياق العام للحدث، فهم توجهات الجمهور، وتحليل المنافسين والوسوم الأكثر تداولاً.</p>
                         </div>
 
                         <!-- Phase 2 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">02</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">تحديد الجمهور والمنصات</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">اختيار المنصات الرقمية الأكثر نشاطاً للجمهور المستهدف وتحديد نبرة الخطاب المناسبة.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">02</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">تحديد الجمهور والمنصات</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">اختيار المنصات الرقمية الأكثر نشاطاً للجمهور المستهدف وتحديد نبرة الخطاب المناسبة.</p>
                         </div>
 
                         <!-- Phase 3 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">03</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">بناء الرسالة الإعلامية</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">صياغة الرسالة الرئيسية والرسائل الفرعية التي تعكس هداف الحملة وتترك أثراً ممتداً.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">03</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">بناء الرسالة الإعلامية</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">صياغة الرسالة الرئيسية والرسائل الفرعية التي تعكس هداف الحملة وتترك أثراً ممتداً.</p>
                         </div>
 
                         <!-- Phase 4 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">04</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">تخطيط وتوزيع المحتوى</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">توزيع المخرجات الـ 5 على الجدول الزمني وتحديد الأوقات الذهبية للنشر لكل منصة.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">04</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">تخطيط وتوزيع المحتوى</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">توزيع المخرجات الـ 5 على الجدول الزمني وتحديد الأوقات الذهبية للنشر لكل منصة.</p>
                         </div>
 
                         <!-- Phase 5 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">05</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">الهندسة والتوليد بالذكاء الاصطناعي</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">استخدام الأوامر الموجهة الدقيقة (Prompts) لتوليد النصوص، السيناريوهات والموجهات البصرية.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">05</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">الهندسة والتوليد بالذكاء الاصطناعي</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">استخدام الأوامر الموجهة الدقيقة (Prompts) لتوليد النصوص، السيناريوهات والموجهات البصرية.</p>
                         </div>
 
                         <!-- Phase 6 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">06</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">المراجعة والأنسنة (Humanization)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">تدقيق وتعديل المحتوى المولّد لإضافة لمسة إنسانية، التحقق من الدقة، وضمان الهوية الثقافية.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">06</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">المراجعة والأنسنة (Humanization)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">تدقيق وتعديل المحتوى المولّد لإضافة لمسة إنسانية، التحقق من الدقة، وضمان الهوية الثقافية.</p>
                         </div>
 
                         <!-- Phase 7 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">07</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">التنفيذ والتفاعل</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">إطلاق المواد عبر المنصات المحددة، إدارة الردود، والتعامل مع تفاعلات الجمهور بالوقت الحي.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">07</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">التنفيذ والتفاعل</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">إطلاق المواد عبر المنصات المحددة، إدارة الردود، والتعامل مع تفاعلات الجمهور بالوقت الحي.</p>
                         </div>
 
                         <!-- Phase 8 -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div class="w-2 h-full bg-brand-500 absolute top-0 right-0"></div>
-                            <span class="text-3xl font-black text-slate-200 group-hover:text-brand-500/30 transition-colors">08</span>
-                            <h4 class="font-bold text-slate-800 text-base mt-1 mb-2">قياس الأثر والتقييم</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">جمع البيانات، قياس المدى والتفاعل، واستخلاص الدروس المستفادة لتحسين الحملات القادمة.</p>
+                            <span class="text-3xl font-black text-slate-200 dark:text-slate-700 group-hover:text-brand-500/30 transition-colors">08</span>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base mt-1 mb-2">قياس الأثر والتقييم</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">جمع البيانات، قياس المدى والتفاعل، واستخلاص الدروس المستفادة لتحسين الحملات القادمة.</p>
                         </div>
                     </div>
                 </div>
@@ -384,96 +417,96 @@
             <!-- TAB 2: CAMPAIGN COMPONENTS (5 COMPONENTS) -->
             <div id="tab2" class="tab-content hidden space-y-6">
                 <div class="mb-4">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-shapes text-brand-600"></i>
                         المكونات الـ 5 الأساسية للمخرج النهائي
                     </h3>
-                    <p class="text-xs text-slate-500 mt-1">يجب أن تتضمن كل حملة متكاملة في "مداد" المكونات الخمسة التالية بشكليها النصي والبصري:</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">يجب أن تتضمن كل حملة متكاملة في "مداد" المكونات الخمسة التالية بشكليها النصي والبصري:</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Component 1 -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-brand-500 transition-all flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-all flex flex-col justify-between">
                         <div>
-                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                            <div class="w-12 h-12 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xl mb-4">
                                 <i class="fa-solid fa-newspaper"></i>
                             </div>
-                            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">المكون 1</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2 mb-2">خبر صحفي (Press Release)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">صياغة إعلامية رسمية موجهة للصحف والمواقع الإخبارية، تعتمد قالب الهرم المعكوس (العنوان، المقدمة، التفاصيل، التصريحات الرسمية، الخاتمة).</p>
+                            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-full">المكون 1</span>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-2 mb-2">خبر صحفي (Press Release)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">صياغة إعلامية رسمية موجهة للصحف والمواقع الإخبارية، تعتمد قالب الهرم المعكوس (العنوان، المقدمة، التفاصيل، التصريحات الرسمية، الخاتمة).</p>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                             <span>الهدف: التغطية الرسمية</span>
-                            <span class="font-semibold text-slate-700">النشر الصحفي</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">النشر الصحفي</span>
                         </div>
                     </div>
 
                     <!-- Component 2 -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-brand-500 transition-all flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-all flex flex-col justify-between">
                         <div>
-                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                            <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-xl mb-4">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </div>
-                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">المكون 2</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2 mb-2">3 منشورات تواصل اجتماعي</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed mb-2">منشورات مخصصة للمنصات النشطة تضم 3 أنماط متنوعة:</p>
-                            <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">المكون 2</span>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-2 mb-2">3 منشورات تواصل اجتماعي</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-2">منشورات مخصصة للمنصات النشطة تضم 3 أنماط متنوعة:</p>
+                            <ul class="text-xs text-slate-600 dark:text-slate-400 space-y-1 list-disc list-inside">
                                 <li>منشور توعوي تثقيفي.</li>
                                 <li>منشور تفاعلي (سؤال/استطلاع).</li>
                                 <li>منشور تحفيزي إعلاني (Call to Action).</li>
                             </ul>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                             <span>الهدف: الانتشار الرقمي</span>
-                            <span class="font-semibold text-slate-700">شبكات التواصل</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">شبكات التواصل</span>
                         </div>
                     </div>
 
                     <!-- Component 3 -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-brand-500 transition-all flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-all flex flex-col justify-between">
                         <div>
-                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                            <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xl mb-4">
                                 <i class="fa-solid fa-chart-pie"></i>
                             </div>
-                            <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">المكون 3</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2 mb-2">إنفوجرافيك بصري (Infographic)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">مخطط بصري يلخص البيانات والمعلومات المعقدة في تسلسل بصرية جذاب وسهل الحفظ والتداول، مع وصف دقيق للتصميم وأوامر توليد الصور.</p>
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-full">المكون 3</span>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-2 mb-2">إنفوجرافيك بصري (Infographic)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">مخطط بصري يلخص البيانات والمعلومات المعقدة في تسلسل بصرية جذاب وسهل الحفظ والتداول، مع وصف دقيق للتصميم وأوامر توليد الصور.</p>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                             <span>الهدف: تبسيط البيانات</span>
-                            <span class="font-semibold text-slate-700">محتوى بصري</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">محتوى بصري</span>
                         </div>
                     </div>
 
                     <!-- Component 4 (Short-form Video) -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-brand-500 transition-all flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-all flex flex-col justify-between">
                         <div>
-                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                            <div class="w-12 h-12 bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center text-xl mb-4">
                                 <i class="fa-solid fa-clapperboard"></i>
                             </div>
-                            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full">المكون 4</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2 mb-2">سيناريو فيديو قصير (Reels / Shorts)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">سيناريو فيديو قصير ورشيق (15-30 ثانية) يتضمن (الخطاف السمعي البصري Hook، المحتوى الرئيسي، الخاتمة والتوجيه) مفصلاً بالحوار والوصف البصري والمؤثرات بما يلائم خوارزميات المنصات الرقمية.</p>
+                            <span class="text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60 px-2.5 py-1 rounded-full">المكون 4</span>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-2 mb-2">سيناريو فيديو قصير (Reels / Shorts)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">سيناريو فيديو قصير ورشيق (15-30 ثانية) يتضمن (الخطاف السمعي البصري Hook، المحتوى الرئيسي، الخاتمة والتوجيه) مفصلاً بالحوار والوصف البصري والمؤثرات بما يلائم خوارزميات المنصات الرقمية.</p>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                             <span>الهدف: جذب الانتباه السريع (15-30 ثانية)</span>
-                            <span class="font-semibold text-slate-700">فيديو قصير</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">فيديو قصير</span>
                         </div>
                     </div>
 
                     <!-- Component 5 -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:border-brand-500 transition-all flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-all flex flex-col justify-between">
                         <div>
-                            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                            <div class="w-12 h-12 bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center text-xl mb-4">
                                 <i class="fa-solid fa-file-powerpoint"></i>
                             </div>
-                            <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full">المكون 5</span>
-                            <h4 class="text-lg font-bold text-slate-800 mt-2 mb-2">عرض تقديمي (Presentation Deck)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">هيكل شرائح (5-7 شرائح) يستعرض فكرة الحملة، استراتيجيتها، نتائجها المتوقعة، ومؤشرات الأداء أمام الشركاء والإدارة العليا.</p>
+                            <span class="text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2.5 py-1 rounded-full">المكون 5</span>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 mt-2 mb-2">عرض تقديمي (Presentation Deck)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">هيكل شرائح (5-7 شرائح) يستعرض فكرة الحملة، استراتيجيتها، نتائجها المتوقعة، ومؤشرات الأداء أمام الشركاء والإدارة العليا.</p>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                             <span>الهدف: الإقناع المؤسسي</span>
-                            <span class="font-semibold text-slate-700">عرض شرائح</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">عرض شرائح</span>
                         </div>
                     </div>
                 </div>
@@ -481,11 +514,11 @@
 
             <!-- TAB 3: CONTENT PLAN & ROLE PROMPTS -->
             <div id="tab3" class="tab-content hidden space-y-8">
-                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-                    <i class="fa-solid fa-lightbulb text-amber-600 text-xl mt-0.5"></i>
-                    <div class="text-xs text-amber-900 leading-relaxed">
+                <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 rounded-2xl p-4 flex items-start gap-3">
+                    <i class="fa-solid fa-lightbulb text-amber-600 dark:text-amber-400 text-xl mt-0.5"></i>
+                    <div class="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
                         <strong class="font-bold">منهجية تحديد الدور (Role Prompting):</strong>
-                        تعتمد الأوامر أدناه على إعطاء نماذج الذكاء الاصطناعي شخصية مهنية خبيرة، مما يرفع جودة ونبرة المخرجات. كما تحتوي الأوامر على تنويهات إرشادية باللغة العربية مفصولة بـ <code class="bg-amber-100 px-1.5 py-0.5 rounded text-amber-800 font-bold">----</code> لتوضيح الغرض من كل خطوة داخل الأمر، بالإضافة إلى نافذة ترجمة وشرح لكل أمر باللغة العربية أسفل اللغات غير العربية.
+                        تعتمد الأوامر أدناه على إعطاء نماذج الذكاء الاصطناعي شخصية مهنية خبيرة، مما يرفع جودة ونبرة المخرجات. كما تحتوي الأوامر على تنويهات إرشادية باللغة العربية مفصولة بـ <code class="bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded text-amber-800 dark:text-amber-200 font-bold">----</code> لتوضيح الغرض من كل خطوة داخل الأمر، بالإضافة إلى نافذة ترجمة وشرح لكل أمر باللغة العربية أسفل اللغات غير العربية.
                     </div>
                 </div>
 
@@ -498,82 +531,82 @@
             <!-- TAB 4: AI INTEGRATION STEPS (7 STEPS) -->
             <div id="tab4" class="tab-content hidden space-y-6">
                 <div class="mb-4">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-diagram-project text-brand-600"></i>
                         خطوات توظيف الذكاء الاصطناعي في مراحل الحملة الـ 7
                     </h3>
-                    <p class="text-xs text-slate-500 mt-1">دليل عملي لتكامل أدوات AI من الفكرة حتى التحليل</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">دليل عملي لتكامل أدوات AI من الفكرة حتى التحليل</p>
                 </div>
 
                 <div class="space-y-4">
                     <!-- Step 1 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">1</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">1</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">العصف الذهني واكتشاف الزوايا (Ideation & Research)</h4>
-                            <p class="text-xs text-slate-600 mt-1">استخدام (ChatGPT / Gemini) لتوليد 10 افكار مبتكرة للحملة واستكشاف الوسوم ورؤى الجمهور المستهدف.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">العصف الذهني واكتشاف الزوايا (Ideation & Research)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">استخدام (ChatGPT / Gemini) لتوليد 10 افكار مبتكرة للحملة واستكشاف الوسوم ورؤى الجمهور المستهدف.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: ChatGPT, Perplexity</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: ChatGPT, Perplexity</span>
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">2</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">2</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">صياغة الأوامر الموجهة (Prompt Engineering)</h4>
-                            <p class="text-xs text-slate-600 mt-1">بناء أوامر تعتمد على "Role Prompting" وتوفير السياق والمحددات والقيود لضمان مخرجات صحفية وتسويقية عالية الدقة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">صياغة الأوامر الموجهة (Prompt Engineering)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">بناء أوامر تعتمد على "Role Prompting" وتوفير السياق والمحددات والقيود لضمان مخرجات صحفية وتسويقية عالية الدقة.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: Claude 3.5, Gemini</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: Claude, Gemini</span>
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">3</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">3</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">توليد وصياغة النصوص الرئيسية (Text Generation)</h4>
-                            <p class="text-xs text-slate-600 mt-1">إنشاء الخبر الصحفي والمنشورات باللغة المستهدفة مع ضبط نبرة الصوت (Tone of Voice) لتناسب المنصة والجمهور.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">توليد وصياغة النصوص الرئيسية (Text Generation)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">إنشاء الخبر الصحفي والمنشورات باللغة المستهدفة مع ضبط نبرة الصوت (Tone of Voice) لتناسب المنصة والجمهور.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: Gemini 2.5, ChatGPT</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: Gemini, ChatGPT</span>
                     </div>
 
                     <!-- Step 4 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">4</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">4</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">توليد الموجهات البصرية والتصاميم (Visual Design Prompts)</h4>
-                            <p class="text-xs text-slate-600 mt-1">صياغة وصف بصري دقيق باللغة الإنجليزية وتوليد الصور أو تصاميم الإنفوجرافيك والمشاهد المرئية للفيديو.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">توليد الموجهات البصرية والتصاميم (Visual Design Prompts)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">صياغة وصف بصري دقيق باللغة الإنجليزية وتوليد الصور أو تصاميم الإنفوجرافيك والمشاهد المرئية للفيديو.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: Midjourney, Imagen, Canva AI</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: Midjourney, Imagen, Canva AI</span>
                     </div>
 
                     <!-- Step 5 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">5</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">5</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">الأنسنة والتدقيق الثقافي واللغوي (Humanizing & Localization)</h4>
-                            <p class="text-xs text-slate-600 mt-1">مراجعة المحتوى المولّد بواسطة خبير إعلامي لتفادي الأخطاء اللغوية والتأكد من ملاءمته للقيم الثقافية والاجتماعية.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">الأنسنة والتدقيق الثقافي واللغوي (Humanizing & Localization)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">مراجعة المحتوى المولّد بواسطة خبير إعلامي لتفادي الأخطاء اللغوية والتأكد من ملاءمته للقيم الثقافية والاجتماعية.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: العنصر البشري + AI Review</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: العنصر البشري + AI Review</span>
                     </div>
 
                     <!-- Step 6 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">6</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">6</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">توليد العروض والوسائط المتعددة (Presentation & Audio-Visual)</h4>
-                            <p class="text-xs text-slate-600 mt-1">تحويل النصوص إلى شرائح عرض تفاعلية وتوليد التعليق الصوتي (Voiceover) للسيناريو إن تطلب الأمر.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">توليد العروض والوسائط المتعددة (Presentation & Audio-Visual)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">تحويل النصوص إلى شرائح عرض تفاعلية وتوليد التعليق الصوتي (Voiceover) للسيناريو إن تطلب الأمر.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: Gamma AI, ElevenLabs</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: Gamma AI, ElevenLabs</span>
                     </div>
 
                     <!-- Step 7 -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
-                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-700 font-bold flex items-center justify-center shrink-0">7</div>
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-sm transition-shadow">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center shrink-0">7</div>
                         <div class="flex-grow">
-                            <h4 class="font-bold text-slate-800 text-sm">تحليل البيانات والمشاعر (Analytics & Sentiment Analysis)</h4>
-                            <p class="text-xs text-slate-600 mt-1">استخدام الذكاء الاصطناعي لتحليل انطباعات الجمهور حول الحملة وتقييم مدى تحقق الأهداف الاستراتيجية.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">تحليل البيانات والمشاعر (Analytics & Sentiment Analysis)</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">استخدام الذكاء الاصطناعي لتحليل انطباعات الجمهور حول الحملة وتقييم مدى تحقق الأهداف الاستراتيجية.</p>
                         </div>
-                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">الأدوات: Brand24, ChatGPT Data Analysis</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">الأدوات: Brand24, ChatGPT Data Analysis</span>
                     </div>
                 </div>
             </div>
@@ -581,107 +614,107 @@
             <!-- TAB 5: EVALUATION CRITERIA (8 CRITERIA) -->
             <div id="tab5" class="tab-content hidden space-y-6">
                 <div class="mb-4">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-award text-brand-600"></i>
                         معايير التقييم الـ 8 المعتمدة للنشاط
                     </h3>
-                    <p class="text-xs text-slate-500 mt-1">يتم تقييم كل حملة بناءً على المعايير الـ 8 التالية بنسبة إجمالية 100% (12.5% لكل معيار):</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">يتم تقييم كل حملة بناءً على المعايير الـ 8 التالية بنسبة إجمالية 100% (12.5% لكل معيار):</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Criterion 1 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">1</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">1</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">وضوح الرسالة والمصدر</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">مدى ارتباط كافة المحتويات بالمصدر والحدث والرسالة الإعلامية الموحدة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">وضوح الرسالة والمصدر</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">مدى ارتباط كافة المحتويات بالمصدر والحدث والرسالة الإعلامية الموحدة.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 2 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">2</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">2</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">ملاءمة الجمهور والمنصات</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">تخصيص المحتوى والنبرة بحسب الثقافة والمنصات الأكثر نشاطاً للجمهور المستهدف.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">ملاءمة الجمهور والمنصات</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">تخصيص المحتوى والنبرة بحسب الثقافة والمنصات الأكثر نشاطاً للجمهور المستهدف.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 3 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">3</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">3</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">احترافية الأوامر الموجهة</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">تطبيق أسلوب Role Prompting بمهارة وتضمين المحددات والتعليمات الواضحة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">احترافية الأوامر الموجهة</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">تطبيق أسلوب Role Prompting بمهارة وتضمين المحددات والتعليمات الواضحة.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 4 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">4</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">4</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">الشمول والتنوع الـ 5</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">تقديم كافة المكونات الـ 5 (خبر، منشورات، إنفوجرافيك، فيديو، عرض) بصورة مكتملة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">الشمول والتنوع الـ 5</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">تقديم كافة المكونات الـ 5 (خبر، منشورات، إنفوجرافيك، فيديو، عرض) بصورة مكتملة.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 5 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">5</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">5</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">التكامل البصري والنصي</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">التناغم والتناسق بين الموجهات البصرية والنصوص في كافة مواد الحملة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">التكامل البصري والنصي</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">التناغم والتناسق بين الموجهات البصرية والنصوص في كافة مواد الحملة.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 6 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">6</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">6</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">الأنسنة والسلامة اللغوية</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">خلو المحتوى من الأخطاء والترجمة الركيكة وإضافة الطابع الإنساني والتفاعل المباشر.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">الأنسنة والسلامة اللغوية</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">خلو المحتوى من الأخطاء والترجمة الركيكة وإضافة الطابع الإنساني والتفاعل المباشر.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 7 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">7</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">7</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">قابليتها للتنفيذ والانتشار</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">واقعية المحتوى وقدرته على الانتشار والتأثير الفعلي في المنصات المستهدفة.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">قابليتها للتنفيذ والانتشار</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">واقعية المحتوى وقدرته على الانتشار والتأثير الفعلي في المنصات المستهدفة.</p>
                         </div>
                     </div>
 
                     <!-- Criterion 8 -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-3">
-                                <span class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs">8</span>
-                                <span class="text-xs font-bold text-brand-600">12.5%</span>
+                                <span class="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 font-bold flex items-center justify-center text-xs">8</span>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400">12.5%</span>
                             </div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-2">الأخلاقيات والمصداقية</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">الالتزام بالمعايير الأخلاقية، تجنب التضليل، والتحقق من صحة المعلومات المنسوبة للمصدر.</p>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm mb-2">الأخلاقيات والمصداقية</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">الالتزام بالمعايير الأخلاقية، تجنب التضليل، والتحقق من صحة المعلومات المنسوبة للمصدر.</p>
                         </div>
                     </div>
                 </div>
@@ -689,16 +722,16 @@
 
             <!-- TAB 6: INTERACTIVE PLAN BUILDER (FORM) -->
             <div id="tab6" class="tab-content hidden space-y-6">
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                    <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                                 <i class="fa-solid fa-pen-ruler text-brand-600"></i>
                                 نموذج بناء الخطة الإعلامية التفاعلي
                             </h3>
-                            <p class="text-xs text-slate-500 mt-1">قم بتعبئة بيانات خطتك الخاصة وصياغة المخرجات مباشرة، ثم طباعتها أو نسخها.</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">قم بتعبئة بيانات خطتك الخاصة وصياغة المخرجات مباشرة، ثم طباعتها أو نسخها.</p>
                         </div>
-                        <button onclick="clearPlanForm()" class="text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors">
+                        <button onclick="clearPlanForm()" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors">
                             <i class="fa-solid fa-rotate-right ml-1"></i> إعادة تعيين Form
                         </button>
                     </div>
@@ -706,46 +739,46 @@
                     <form id="interactive-plan-form" onsubmit="event.preventDefault(); printPlan();" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">اسم المتدرب / اسم الفريق</label>
-                                <input type="text" id="form-author" placeholder="أدخل اسمك هنا" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">اسم المتدرب / اسم الفريق</label>
+                                <input type="text" id="form-author" placeholder="أدخل اسمك هنا" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">اسم الحملة المقترحة</label>
-                                <input type="text" id="form-title" placeholder="عنوان الحملة" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">اسم الحملة المقترحة</label>
+                                <input type="text" id="form-title" placeholder="عنوان الحملة" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">1. الخبر الصحفي الرسمي</label>
-                            <textarea id="form-press" rows="3" placeholder="اكتب الخبر الصحفي هنا بناءً على الموجه المقترح..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">1. الخبر الصحفي الرسمي</label>
+                            <textarea id="form-press" rows="3" placeholder="اكتب الخبر الصحفي هنا بناءً على الموجه المقترح..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">2. المنشورات الثلاثة لتواصل الاجتماعي</label>
-                            <textarea id="form-posts" rows="4" placeholder="المنشور 1 (توعوي):&#10;المنشور 2 (تفاعلي):&#10;المنشور 3 (إعلاني):" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">2. المنشورات الثلاثة لتواصل الاجتماعي</label>
+                            <textarea id="form-posts" rows="4" placeholder="المنشور 1 (توعوي):&#10;المنشور 2 (تفاعلي):&#10;المنشور 3 (إعلاني):" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">3. إنفوجرافيك بصري (وصف التصميم والموجّه)</label>
-                                <textarea id="form-infographic" rows="3" placeholder="وصف عناصر الإنفوجرافيك والموجه البصري..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">3. إنفوجرافيك بصري (وصف التصميم والموجّه)</label>
+                                <textarea id="form-infographic" rows="3" placeholder="وصف عناصر الإنفوجرافيك والموجه البصري..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">4. سيناريو الفيديو القصير (Reels/Shorts - 15-30 ثانية)</label>
-                                <textarea id="form-script" rows="3" placeholder="الخطاف (3ث)، صلب الفيديو (15ث)، الدعوة للإجراء (3ث)..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">4. سيناريو الفيديو القصير (Reels/Shorts - 15-30 ثانية)</label>
+                                <textarea id="form-script" rows="3" placeholder="الخطاف (3ث)، صلب الفيديو (15ث)، الدعوة للإجراء (3ث)..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">5. هيكل العرض التقديمي (Presentation Deck)</label>
-                            <textarea id="form-deck" rows="3" placeholder="الشريحة 1: العنوان، الشريحة 2: المشكلة والهدف..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">5. هيكل العرض التقديمي (Presentation Deck)</label>
+                            <textarea id="form-deck" rows="3" placeholder="الشريحة 1: العنوان، الشريحة 2: المشكلة والهدف..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-100 rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                         </div>
 
-                        <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-100">
+                        <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                             <button type="button" onclick="savePlanLocally()" class="px-5 py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700 transition-colors flex items-center gap-2">
                                 <i class="fa-solid fa-floppy-disk"></i> حفظ مسودة الخطة
                             </button>
-                            <button type="submit" class="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-xs font-bold hover:bg-slate-700 transition-colors flex items-center gap-2">
+                            <button type="submit" class="px-5 py-2.5 bg-slate-800 dark:bg-slate-700 text-white rounded-xl text-xs font-bold hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors flex items-center gap-2">
                                 <i class="fa-solid fa-print"></i> طباعة/تصدير الخطة
                             </button>
                         </div>
@@ -759,19 +792,10 @@
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-12 text-center text-xs">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-                <!-- Footer Vector Logo with White Color and Purple Diamond -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 416 90" class="h-5 w-auto">
-                    <path fill="#FFFFFF" d="M 10 80 V 10 H 26 L 48 53 L 70 10 H 86 V 80 H 71 V 32 L 52 70 H 44 L 25 32 V 80 Z" />
-                    <path fill="#FFFFFF" d="M 102 10 H 118 V 80 H 102 Z" />
-                    <path fill="#FFFFFF" d="M 134 10 H 168 C 198 10 216 26 216 45 C 216 64 198 80 168 80 H 134 Z M 150 24 V 66 H 167 C 187 66 200 55 200 45 C 200 35 187 24 167 24 Z" />
-                    <path fill="#FFFFFF" d="M 232 80 L 262 10 H 278 L 308 80 H 291 L 270 30 L 249 80 Z" />
-                    <path fill="#6366F1" d="M 270 51 L 279 63 L 270 75 L 261 63 Z" />
-                    <path fill="#FFFFFF" d="M 324 10 H 358 C 388 10 406 26 406 45 C 406 64 388 80 358 80 H 324 Z M 340 24 V 66 H 357 C 377 66 390 55 390 45 C 390 35 377 24 357 24 Z" />
-                </svg>
-                <span>—</span>
-                <span class="text-yellow-300 font-bold">لكل فكرة أثر</span>
-            </div>
+            <picture>
+                <source srcset="/assets/midad-logo.webp" type="image/webp">
+                <img src="/assets/midad-logo.png" alt="مداد MIDAD" class="h-9 w-auto opacity-90" width="700" height="291">
+            </picture>
             <p>جميع الحقوق محفوظة © 2026 - منصة التدريب الإعلامي التفاعلي بالذكاء الاصطناعي</p>
         </div>
     </footer>
@@ -815,6 +839,15 @@
             'deck': 'شرح الموجه: يتولى النموذج دور مستشار اتصال مؤسسي لبناء عرض تقديمي من 5-7 شرائح لعرض استراتيجية الحملة أمام الإدارة.',
             'creative_visuals': 'شرح الموجه: يتولى النموذج دور مدير إبداعي لابتكار حزمة محتوى مرئي تتكون من 3 أفكار إنفوجرافيك متنوعة الزوايا (مقارنة، بيانات، خطوات) + فكرة فيديو قصير واحد سينمائي مكثف (15-30 ثانية).'
         };
+
+        // Theme: light is the default, dark is an explicit opt-in stored per browser.
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            try {
+                localStorage.setItem('midad_theme', isDark ? 'dark' : 'light');
+            } catch (e) {}
+            showToast(isDark ? 'تم تفعيل الوضع الليلي' : 'تم تفعيل الوضع النهاري');
+        }
 
         // Switch Tabs Function
         function switchTab(tabId) {
@@ -886,7 +919,7 @@
                     title: '1. أمر الخبر الصحفي (Press Release Prompt)',
                     role: 'أنت صحفي ورئيس تحرير إعلامي خبير في وكالات الأنباء الرسمية.',
                     icon: 'fa-newspaper',
-                    color: 'text-blue-600',
+                    color: 'text-blue-600 dark:text-blue-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني (Role Prompting)]
 أنت صحفي ورئيس تحرير إعلامي محترف، خبرتك 15 عاماً في صياغة البيانات الصحفية للفعاليات الكبرى.
 تنويه باللغة العربية: تهدف هذه الخطوة لتوجيه الذكاء الاصطناعي لتقمص شخصية رئيس تحرير صحفي لضمان نبرة رسمية ودقيقة.
@@ -912,7 +945,7 @@
                     title: '2. أمر منشورات التواصل الاجتماعي (3 Social Posts Prompt)',
                     role: 'أنت خبير تسويق رقمي ومدير حسابات تواصل اجتماعي استراتيجي.',
                     icon: 'fa-share-nodes',
-                    color: 'text-emerald-600',
+                    color: 'text-emerald-600 dark:text-emerald-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني]
 أنت خبير تسويق رقمي ومدير استراتيجي لحسابات التواصل الاجتماعي متخصص في صناعة المحتوى الفيروسي.
 تنويه باللغة العربية: تمنح الذكاء الاصطناعي خبرة تسويقية رقمية لابتكار منشورات تفاعلية وجذابة.
@@ -943,7 +976,7 @@
                     title: '3. أمر الإنفوجرافيك والموجّه البصري (Infographic Prompt)',
                     role: 'أنت مصمم هوية ومحتوى بصري متطور وخبير في تبسيط البيانات.',
                     icon: 'fa-chart-pie',
-                    color: 'text-amber-600',
+                    color: 'text-amber-600 dark:text-amber-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني]
 أنت مصمم هوية ومحتوى بصري متطور وخبير في تبسيط البيانات والمعلومات المعقدة.
 تنويه باللغة العربية: يركز الموجه على تحويل النصوص الصماء إلى مخرجات بصرية جذابة وسهلة الفهم.
@@ -968,7 +1001,7 @@
                     title: '4. أمر سيناريو الفيديو القصير (Reels/Shorts Script Prompt)',
                     role: 'أنت كاتب سينمائي وسيناريو ومخرج فيديوهات قصيرة متمكن.',
                     icon: 'fa-clapperboard',
-                    color: 'text-purple-600',
+                    color: 'text-purple-600 dark:text-purple-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني]
 أنت كاتب سيناريو ومخرج فيديوهات قصيرة متمكن متخصص في منصات Reels و TikTok و Shorts و Snapchat.
 تنويه باللغة العربية: توجيه النموذج للتفكير بمنظور إخراجي وبصري سريع ومناسب للفيديوهات القصيرة للغاية.
@@ -994,7 +1027,7 @@
                     title: '5. أمر العرض التقديمي (Presentation Deck Prompt)',
                     role: 'أنت مستشار اتصال مؤسسي وخبير في إعداد عروض الإدارة العليا.',
                     icon: 'fa-file-powerpoint',
-                    color: 'text-rose-600',
+                    color: 'text-rose-600 dark:text-rose-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني]
 أنت مستشار اتصال استراتيجي وخبير في بناء العروض التقديمية التنفيذية (Pitch Decks).
 تنويه باللغة العربية: إعطاء النموذج خلفية استشارية مؤسسية لإقناع صناع القرار والإدارة.
@@ -1022,7 +1055,7 @@
                     title: '6. أمر المقترحات الإبداعية المرئية (3 إنفوجرافيك + 1 فيديو قصير)',
                     role: 'أنت مدير إبداعي (Creative Director) خبير في ابتكار الأفكار المرئية الفيروسية.',
                     icon: 'fa-wand-magic-sparkles',
-                    color: 'text-indigo-600',
+                    color: 'text-indigo-600 dark:text-indigo-400',
                     promptText: `[الخطوة 1: تحديد الدور المهني (Role Prompting)]
 أنت مدير إبداعي (Creative Director) ومبتكر أفكار محتوى مرئي خبرة 12 عاماً في كبرى وكالات الإبداع الإقليمية.
 تنويه باللغة العربية: تهدف هذه الخطوة لتوجيه الذكاء الاصطناعي بالتفكير الخلاق خارج الصندوق لتقديم أفكار ذات انتشار فيروسي عالي.
@@ -1060,15 +1093,15 @@
 
             promptsData.forEach(p => {
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4";
+                card.className = "bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4";
 
                 card.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid ${p.icon} ${p.color} text-xl"></i>
                             <div>
-                                <h4 class="font-bold text-slate-800 text-sm">${p.title}</h4>
-                                <p class="text-xs text-brand-700 font-semibold mt-0.5">${p.role}</p>
+                                <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">${p.title}</h4>
+                                <p class="text-xs text-brand-700 dark:text-brand-400 font-semibold mt-0.5">${p.role}</p>
                             </div>
                         </div>
 
@@ -1080,28 +1113,28 @@
                     </div>
 
                     <!-- Main Prompt Code Text Container -->
-                    <div class="bg-slate-900 text-slate-200 p-4 rounded-xl text-xs font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap dir-ltr text-left border border-slate-800 shadow-inner" id="prompt-box-${p.key}">
+                    <div class="bg-slate-900 dark:bg-slate-950 text-slate-200 p-4 rounded-xl text-xs font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap dir-ltr text-left border border-slate-800 shadow-inner" id="prompt-box-${p.key}">
 ${p.promptText}
                     </div>
 
                     <!-- Mini Translation & Explanation Box -->
-                    <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-3.5 space-y-2 relative overflow-hidden">
+                    <div class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/90 dark:border-slate-700/60 rounded-xl p-3.5 space-y-2 relative overflow-hidden">
                         <div class="w-1 bg-brand-500 absolute top-0 bottom-0 right-0"></div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                                <i class="fa-solid fa-language text-brand-600"></i>
+                            <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                                <i class="fa-solid fa-language text-brand-600 dark:text-brand-400"></i>
                                 نافذة الترجمة والشرح باللغة العربية
                             </span>
-                            <span class="text-[10px] text-slate-400 bg-white px-2 py-0.5 rounded border border-slate-200 font-medium">
-                                لغة الحملة المحددة: <strong class="text-brand-600">${langVal}</strong>
+                            <span class="text-[10px] text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-medium">
+                                لغة الحملة المحددة: <strong class="text-brand-600 dark:text-brand-400">${langVal}</strong>
                             </span>
                         </div>
-                        <p class="text-xs text-slate-600 leading-relaxed font-sans pr-2">
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pr-2">
                             ${p.arabicTranslation}
                         </p>
                         ${isNonArabic ? `
-                            <div class="pt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] text-amber-800 font-medium">
-                                <i class="fa-solid fa-circle-info text-amber-600"></i>
+                            <div class="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center gap-1.5 text-[11px] text-amber-800 dark:text-amber-300 font-medium">
+                                <i class="fa-solid fa-circle-info text-amber-600 dark:text-amber-400"></i>
                                 تنويه: نظراً لأن اللغة المحددة هي (${langVal})، فإن الأمر الموجه يحتوي على نص التوجيه باللغة العربية مع توجيه الذكاء الاصطناعي لإخراج المادة باللغة (${langVal}) مباشرة.
                             </div>
                         ` : ''}
@@ -1132,13 +1165,15 @@ ${p.promptText}
         }
 
         // Show Toast Notification
+        let toastTimer = null;
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').textContent = message;
             toast.classList.remove('translate-y-20', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
 
-            setTimeout(() => {
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
@@ -1152,13 +1187,13 @@ ${p.promptText}
             const langVal = document.getElementById('select-language').value;
 
             content.innerHTML = `
-                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                    <p class="font-bold text-slate-800 text-xs mb-1">اللغة المستهدفة حالياً: <span class="text-brand-600">${langVal}</span></p>
-                    <p class="text-xs text-slate-600">${explanation}</p>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <p class="font-bold text-slate-800 dark:text-slate-100 text-xs mb-1">اللغة المستهدفة حالياً: <span class="text-brand-600 dark:text-brand-400">${langVal}</span></p>
+                    <p class="text-xs text-slate-600 dark:text-slate-300">${explanation}</p>
                 </div>
-                <div class="text-xs space-y-2 text-slate-700">
+                <div class="text-xs space-y-2 text-slate-700 dark:text-slate-300">
                     <p class="font-bold">مكونات التعليمات داخل الأمر:</p>
-                    <ul class="list-disc list-inside space-y-1 text-slate-600 pr-2">
+                    <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 pr-2">
                         <li><strong>تحديد الدور (Role Prompting):</strong> إعطاء الذكاء الاصطناعي مهنة خبيرة محددة.</li>
                         <li><strong>الفاصل (----):</strong> تنظيم وتجزئة الأفكار للذكاء الاصطناعي لضمان فهم كل خطوة.</li>
                         <li><strong>المحددات والقيود:</strong> ضبط عدد المنشورات والفقرات ونبرة الصوت المطلوبة.</li>
