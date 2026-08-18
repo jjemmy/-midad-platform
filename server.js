@@ -10,7 +10,9 @@ const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const path = require('node:path');
 
-const PORT = Number(process.env.PORT) || 3000;
+// 8080 matches the target port on the generated Railway domain, so the app is
+// reachable even when no PORT variable is set on the service.
+const PORT = Number(process.env.PORT) || 8080;
 const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 

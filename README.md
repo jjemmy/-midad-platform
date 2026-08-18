@@ -1,6 +1,6 @@
 # مداد MIDAD — منصة التخطيط الإعلامي وصناعة المحتوى
 
-> لكل فكرة أثر
+> لكل كلمة أثر
 
 منصة تفاعلية (صفحة واحدة) لبناء الحملات الإعلامية وتوليد الأوامر الموجهة (Prompts) للذكاء الاصطناعي،
 مع تحديث حي للمنصات والأوامر حسب الحدث والموضوع والمصدر واللغة والجمهور المستهدف.
@@ -17,7 +17,7 @@
 | `public/assets/icon-mark.png` | شعار M/AI بخلفية شفافة للاستخدامات الأخرى |
 | `server.js` | خادم ملفات ثابتة بدون أي اعتماديات خارجية (Node.js فقط) |
 | `scripts/version-assets.mjs` | يبصم روابط الأصول ببصمة محتواها لمنع الكاش القديم |
-| `Dockerfile` | صورة البناء (Node.js 22 Alpine) — بناء محدد وسريع |
+| `nixpacks.toml` | إعدادات البناء (Node.js 20) |
 | `railway.json` | إعدادات النشر على Railway (أمر التشغيل + فحص الصحة) |
 
 ## المزايا
@@ -39,36 +39,29 @@ npm start
 node server.js
 ```
 
-ثم افتح: http://localhost:3000
+ثم افتح: http://localhost:8080
 
 لتغيير المنفذ:
 
 ```bash
-PORT=8080 npm start
+PORT=3000 npm start
 ```
 
 ## النشر على Railway
 
 1. ادخل على [railway.app](https://railway.app) واختر **New Project** ← **Deploy from GitHub repo**.
 2. اختر المستودع `jjemmy/-midad-platform` والفرع المطلوب.
-3. Railway يبني عبر `Dockerfile` مباشرة (محدد في `railway.json`) — لا يعتمد على اكتشاف تلقائي.
+3. Railway يبني عبر Nixpacks (محدد في `railway.json`) ويشغّل `npm start` — لا حاجة لأي إعداد إضافي.
 4. من تبويب **Settings** ← **Networking** اضغط **Generate Domain** واختر المنفذ `8080`.
 
 ### متغيرات البيئة
 
 | المتغير | الوصف | الافتراضي |
 | --- | --- | --- |
-| `PORT` | المنفذ — مضبوط على `8080` داخل الصورة، وتستطيع Railway تجاوزه | `8080` |
+| `PORT` | المنفذ — الافتراضي `8080` ليطابق منفذ الدومين، وتستطيع Railway تجاوزه | `8080` |
 | `HOST` | عنوان الاستماع | `0.0.0.0` |
 
 لا يحتاج المشروع أي مفاتيح أو أسرار.
-
-### بناء واختبار الصورة محلياً
-
-```bash
-docker build -t midad-platform .
-docker run --rm -p 8080:8080 midad-platform
-```
 
 ### فحص الصحة (Health Check)
 
