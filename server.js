@@ -142,5 +142,11 @@ for (const signal of ['SIGTERM', 'SIGINT']) {
     process.on(signal, () => {
         console.log(`Received ${signal}, shutting down.`);
         server.close(() => process.exit(0));
+        // Idle keep-alive sockets would otherwise hold the server open until the
+        // platform kills the container, which surfaces as a failed shutdown.
+        server.closeIdleConnections?.();
+        server.closeAllConnections?.();
+        // Last resort so shutdown can never hang.
+        setTimeout(() => process.exit(0), 5000).unref();
     });
 }
