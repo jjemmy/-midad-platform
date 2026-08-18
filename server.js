@@ -51,19 +51,43 @@ function resolveRequestPath(urlPath) {
     return resolved;
 }
 
-async function sendFile(res, filePath, statusCode = 200) {
+function cacheControl(ext, versioned) {
+    // HTML must never be served stale, or a deploy stays invisible.
+    if (ext === '.html') return 'no-cache';
+    // scripts/version-assets.mjs stamps asset URLs with a content hash, so a
+    // versioned URL can only ever mean one specific file.
+    if (versioned) return 'public, max-age=31536000, immutable';
+    // Anything unstamped still revalidates against the ETag below.
+    return 'public, max-age=300';
+}
+
+async function sendFile(req, res, filePath, { statusCode = 200, versioned = false } = {}) {
     const stat = await fsp.stat(filePath);
     const ext = path.extname(filePath).toLowerCase();
-    const isHtml = ext === '.html';
+    const etag = `"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}"`;
 
-    res.writeHead(statusCode, {
+    const headers = {
         'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
-        'Content-Length': stat.size,
-        // HTML is revalidated every time so deploys show up immediately.
-        'Cache-Control': isHtml ? 'no-cache' : 'public, max-age=3600',
+        'Cache-Control': cacheControl(ext, versioned),
+        'Last-Modified': stat.mtime.toUTCString(),
+        ETag: etag,
         'X-Content-Type-Options': 'nosniff'
-    });
+    };
 
+    // Let a client with an unchanged copy skip the download.
+    if (req.headers['if-none-match'] === etag) {
+        res.writeHead(304, headers);
+        res.end();
+        return;
+    }
+
+    headers['Content-Length'] = stat.size;
+    res.writeHead(statusCode, headers);
+
+    if (req.method === 'HEAD') {
+        res.end();
+        return;
+    }
     fs.createReadStream(filePath).pipe(res);
 }
 
@@ -81,23 +105,26 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    const filePath = resolveRequestPath(req.url || '/');
+    const url = req.url || '/';
+    const filePath = resolveRequestPath(url);
     if (!filePath) {
         res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
         res.end('Bad Request');
         return;
     }
 
+    const versioned = /[?&]v=[a-f0-9]+/.test(url);
+
     try {
         let target = filePath;
         const stat = await fsp.stat(target).catch(() => null);
         if (stat && stat.isDirectory()) target = path.join(target, 'index.html');
 
-        await sendFile(res, target);
+        await sendFile(req, res, target, { versioned });
     } catch {
         // Unknown path -> fall back to the single-page app entry point.
         try {
-            await sendFile(res, path.join(PUBLIC_DIR, 'index.html'), 404);
+            await sendFile(req, res, path.join(PUBLIC_DIR, 'index.html'), { statusCode: 404 });
         } catch {
             res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
             res.end('Not Found');

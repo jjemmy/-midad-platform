@@ -2,11 +2,12 @@
   "name": "midad-platform",
   "version": "1.0.0",
   "private": true,
-  "description": "منصة مداد للتخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي - لكل فكرة أثر",
+  "description": "منصة مداد للتخطيط الإعلامي وصناعة المحتوى بالذكاء الاصطناعي - لكل كلمة أثر",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "version-assets": "node scripts/version-assets.mjs"
   },
   "engines": {
     "node": ">=20"
